@@ -18,3 +18,4 @@ jobs:
         curl -X POST -H "Content-Type: application/json" \
         -d '{"action": "${{ github.event_name }}", "author": "${{ github.actor }}", "from_branch": "${{ github.event.before }}", "to_branch": "${{ github.ref }}", "timestamp": "${{ github.event.head_commit.timestamp }}"}' \
         http://localhost:5000/webhook
+
