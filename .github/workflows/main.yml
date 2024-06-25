@@ -17,4 +17,4 @@ jobs:
       run: |
         curl -X POST -H "Content-Type: application/json" \
         -d '{"action": "${{ github.event_name }}", "author": "${{ github.actor }}", "from_branch": "${{ github.event.before }}", "to_branch": "${{ github.ref }}", "timestamp": "${{ github.event.head_commit.timestamp }}"}' \
-        https://github.com/96Pawan/webhook-repo.git
+        http://localhost:5000/webhook
