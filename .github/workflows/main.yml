@@ -13,8 +13,23 @@ jobs:
   webhook:
     runs-on: ubuntu-latest
     steps:
-    - name: Send Webhook
+    - name: Send Webhook for Push
+      if: github.event_name == 'push'
       run: |
         curl -X POST -H "Content-Type: application/json" \
-        -d '{"action": "${{ github.event_name }}", "author": "${{ github.actor }}", "from_branch": "${{ github.event.before }}", "to_branch": "${{ github.ref }}", "timestamp": "${{ github.event.head_commit.timestamp }}"}' \
+        -d '{"action": "push", "author": "${{ github.actor }}", "to_branch": "${{ github.ref }}", "timestamp": "${{ github.event.head_commit.timestamp }}"}' \
+        https://4896-2409-40f2-28-a132-810d-a664-3b0b-8aee.ngrok-free.app/webhook
+
+    - name: Send Webhook for Pull Request
+      if: github.event_name == 'pull_request'
+      run: |
+        curl -X POST -H "Content-Type: application/json" \
+        -d '{"action": "pull_request", "author": "${{ github.actor }}", "from_branch": "${{ github.event.pull_request.head.ref }}", "to_branch": "${{ github.event.pull_request.base.ref }}", "timestamp": "${{ github.event.pull_request.updated_at }}"}' \
+        https://4896-2409-40f2-28-a132-810d-a664-3b0b-8aee.ngrok-free.app/webhook
+
+    - name: Send Webhook for Merge
+      if: github.event.pull_request.merged == true
+      run: |
+        curl -X POST -H "Content-Type: application/json" \
+        -d '{"action": "merge", "author": "${{ github.actor }}", "from_branch": "${{ github.event.pull_request.head.ref }}", "to_branch": "${{ github.event.pull_request.base.ref }}", "timestamp": "${{ github.event.pull_request.merged_at }}"}' \
         https://4896-2409-40f2-28-a132-810d-a664-3b0b-8aee.ngrok-free.app/webhook
